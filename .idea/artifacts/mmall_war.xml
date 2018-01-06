@@ -4,4 +4,5 @@
     <root id="archive" name="mmall.war">
       <element id="artifact" artifact-name="mmall:war exploded" />
     </root>
+  </artifact>
 </component>
