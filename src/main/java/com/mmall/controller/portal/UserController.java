@@ -70,6 +70,6 @@ public class UserController {
     @RequestMapping(value = "check_valid.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> checkValid(String str, String type){
-        iUserService.checkValid(str, type);
+        return iUserService.checkValid(str, type);
     }
 }
