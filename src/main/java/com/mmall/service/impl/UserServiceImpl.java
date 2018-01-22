@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.print.attribute.standard.Severity;
 import java.util.UUID;
 
 import static com.mmall.commom.TokenCache.TOKEN_PREFIX;
@@ -149,5 +150,27 @@ public class UserServiceImpl implements IUserService {
             return ServerResponse.createBySuccessMessage("密码更新成功");
         }
         return ServerResponse.createByErrorMessage("密码更新失败");
+    }
+
+    public ServerResponse<User> updateInformation(User user){
+        //username 不能被更新
+        //email需要进行校验，检验新的email是不是已经存在
+        int resultCount = userMapper.checkEmailByUserId(user.getEmail(), user.getId());
+        if(resultCount > 0){
+            return ServerResponse.createByErrorMessage("email已存在");
+        }
+        User updateUser = new User();
+        updateUser.setId(user.getId());
+        updateUser.setEmail(user.getEmail());
+        updateUser.setPhone(user.getPhone());
+        updateUser.setQuestion(user.getQuestion());
+        updateUser.setAnswer(user.getAnswer());
+
+        int updateCount = userMapper.updateByPrimaryKeySelective(updateUser);
+        if(updateCount > 0){
+            return ServerResponse.createBySuccess("更新个人信息成功", updateUser);
+        }
+        return ServerResponse.createByErrorMessage("更新个人信息失败");
+
     }
 }
