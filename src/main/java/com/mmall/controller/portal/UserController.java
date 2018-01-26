@@ -1,6 +1,7 @@
 package com.mmall.controller.portal;
 
 import com.mmall.commom.Const;
+import com.mmall.commom.ResponseCode;
 import com.mmall.commom.ServerResponse;
 import com.mmall.pojo.User;
 import com.mmall.service.IUserService;
@@ -63,8 +64,8 @@ public class UserController {
 
     /**
      * 校验
-     * @param str
-     * @param type
+     * @param str 用户名或者邮箱
+     * @param type 类型，是 username 还是 email
      * @return
      */
     @RequestMapping(value = "check_valid.do", method = RequestMethod.POST)
@@ -166,4 +167,19 @@ public class UserController {
         return response;
     }
 
+
+    /**
+     * 获取用户详细信息
+     * @param session
+     * @return
+     */
+    @RequestMapping(value = "get_information.do", method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<User> get_information(HttpSession session){
+        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
+        if(currentUser == null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "未登录,需要强制登录status=10");
+        }
+        return iUserService.getInformation(currentUser.getId());
+    }
 }
