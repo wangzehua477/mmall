@@ -15,7 +15,7 @@ public class FTPUtil {
     private static final Logger logger = LoggerFactory.getLogger(FTPUtil.class);
 
     private static String ftpIp = PropertiesUtil.getProperty("ftp.server.ip");
-    private static String ftpUser = PropertiesUtil.getProperty("ftp.use");
+    private static String ftpUser = PropertiesUtil.getProperty("ftp.user");
     private static String ftpPass = PropertiesUtil.getProperty("ftp.pass");
 
     public FTPUtil(String ip, int port, String user, String pwd) {
