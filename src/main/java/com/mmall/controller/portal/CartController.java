@@ -37,4 +37,40 @@ public class CartController {
 
         return iCartService.add(currentUser.getId(), productId, count);
     }
+
+    /**
+     * 购物车更新
+     * @param session
+     * @param count
+     * @param productId
+     * @return
+     */
+    @RequestMapping("update.do")
+    @ResponseBody
+    public ServerResponse<CartVo> update(HttpSession session, Integer count, Integer productId){
+        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
+        if(currentUser == null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
+        }
+
+        return iCartService.update(currentUser.getId(), productId, count);
+    }
+
+
+    /**
+     * 删除商品（一个或多个）
+     * @param session
+     * @param productIds
+     * @return
+     */
+    @RequestMapping("delete_product.do")
+    @ResponseBody
+    public ServerResponse<CartVo> deleteProduct(HttpSession session, String productIds){
+        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
+        if(currentUser == null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
+        }
+
+        return iCartService.deleteProduct(currentUser.getId(), productIds);
+    }
 }

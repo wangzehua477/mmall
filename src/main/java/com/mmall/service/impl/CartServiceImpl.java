@@ -1,5 +1,6 @@
 package com.mmall.service.impl;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.mmall.commom.Const;
 import com.mmall.commom.ResponseCode;
@@ -31,7 +32,7 @@ public class CartServiceImpl implements ICartService {
 
     public ServerResponse<CartVo> add(Integer userId, Integer productId, Integer count) {
 
-        if(productId == null || count == null){
+        if (productId == null || count == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), ResponseCode.ILLEGAL_ARGUMENT.getDesc());
         }
 
@@ -54,6 +55,29 @@ public class CartServiceImpl implements ICartService {
         return ServerResponse.createBySuccess(cartVo);
     }
 
+    public ServerResponse<CartVo> update(Integer userId, Integer productId, Integer count) {
+        if (productId == null || count == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+        }
+        Cart cart = cartMapper.selectCartByUserIdProductId(userId, productId);
+        if (cart != null) {
+            cart.setQuantity(count);
+        }
+        cartMapper.updateByPrimaryKeySelective(cart);
+        CartVo cartVo = this.getCartVoLimit(userId);
+        return ServerResponse.createBySuccess(cartVo);
+    }
+
+
+    public ServerResponse<CartVo> deleteProduct(Integer userId, String productIds){
+        List<String> productList = Splitter.on(",").splitToList(productIds);
+        if(CollectionUtils.isEmpty(productList)){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+        }
+        cartMapper.deleteByUserIdProductIds(userId, productList);
+        CartVo cartVo = this.getCartVoLimit(userId);
+        return ServerResponse.createBySuccess(cartVo);
+    }
 
     private CartVo getCartVoLimit(Integer userId) {
         CartVo cartVo = new CartVo();
@@ -97,7 +121,7 @@ public class CartServiceImpl implements ICartService {
                     cartProductVo.setProductChecked(cartItem.getChecked());
                 }
 
-                if(cartItem.getChecked() == Const.Cart.CHECKEN){
+                if (cartItem.getChecked() == Const.Cart.CHECKEN) {
                     //如果已经勾选，增加到整个购物车总价中
                     cartTotalPrice = BigDecimalUtil.add(cartTotalPrice.doubleValue(), cartProductVo.getProductTotalPrice().doubleValue());
                 }
@@ -115,8 +139,8 @@ public class CartServiceImpl implements ICartService {
         return cartVo;
     }
 
-    private boolean getAllCheckedStatus(Integer userId){
-        if(userId == null){
+    private boolean getAllCheckedStatus(Integer userId) {
+        if (userId == null) {
             return false;
         }
         return cartMapper.selectCartProductCheckedStatusByUserId(userId) == 0;
