@@ -43,6 +43,7 @@ public class CartServiceImpl implements ICartService {
             cartItem.setQuantity(count);
             cartItem.setChecked(Const.Cart.CHECKEN);
             cartItem.setUserId(userId);
+            cartItem.setProductId(productId);
             cartMapper.insert(cartItem);
         } else {
             //产品已经在购物车里
