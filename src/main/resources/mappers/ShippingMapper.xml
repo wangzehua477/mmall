@@ -200,7 +200,7 @@
     and user_id = #{userId, jdbcType=INTEGER}
   </update>
 
-    <select id="selectByShippingIdUserId" resultType="BaseResultMap" parameterType="map">
+    <select id="selectByShippingIdUserId" resultMap="BaseResultMap" parameterType="map">
         select
         <include refid="Base_Column_List"/>
         from mmall_shipping
@@ -208,7 +208,7 @@
         and user_id = #{userId}
     </select>
 
-    <select id="selectByUserId" resultType="BaseResultMap" parameterType="map">
+    <select id="selectByUserId" resultMap="BaseResultMap" parameterType="map">
         select
         <include refid="Base_Column_List"/>
         from mmall_shipping
