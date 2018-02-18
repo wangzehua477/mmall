@@ -115,7 +115,7 @@ public class OrderServiceImpl implements IOrderService{
                 .setUndiscountableAmount(undiscountableAmount).setSellerId(sellerId).setBody(body)
                 .setOperatorId(operatorId).setStoreId(storeId).setExtendParams(extendParams)
                 .setTimeoutExpress(timeoutExpress)
-                //                .setNotifyUrl(PropertiesUtil.getProperty("alipay.callback.url"))//支付宝服务器主动通知商户服务器里指定的页面http路径,根据需要设置
+                .setNotifyUrl(PropertiesUtil.getProperty("alipay.callback.url"))//支付宝服务器主动通知商户服务器里指定的页面http路径,根据需要设置
                 .setGoodsDetailList(goodsDetailList);
 
         /** 一定要在创建AlipayTradeService之前调用Configs.init()设置默认参数
@@ -155,7 +155,7 @@ public class OrderServiceImpl implements IOrderService{
                 }
                 logger.info("qrPath:" + qrPath);
 
-                String qrUrl = PropertiesUtil.getProperty("alipay.callback.url") + targetFile.getName();
+                String qrUrl = PropertiesUtil.getProperty("ftp.server.http.prefix") + targetFile.getName();
                 resultMap.put("qrUrl", qrUrl);
                 return ServerResponse.createBySuccess(resultMap);
             case FAILED:
