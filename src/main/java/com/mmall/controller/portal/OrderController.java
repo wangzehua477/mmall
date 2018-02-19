@@ -30,6 +30,22 @@ public class OrderController {
     @Autowired
     private IOrderService iOrderService;
 
+    @RequestMapping("create.do")
+    @ResponseBody
+    public ServerResponse create(HttpSession session, Integer shippingId) {
+        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
+        if (currentUser == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
+        }
+
+        return iOrderService.createOrder(currentUser.getId(), shippingId);
+    }
+
+
+
+
+
+
     /**
      * 支付接口
      *
